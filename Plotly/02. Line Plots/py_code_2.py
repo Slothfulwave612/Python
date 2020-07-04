@@ -10,7 +10,7 @@ import plotly.offline as pyo
 import plotly.graph_objs as go
 
 ## reading in the data
-df = pd.read_csv('Data/population.csv', index_col=0)
+df = pd.read_csv('../Data/population.csv', index_col=0)
 
 ## creating data list
 data = [go.Scatter(
