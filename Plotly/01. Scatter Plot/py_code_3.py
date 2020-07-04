@@ -1,7 +1,7 @@
 '''
 author: @slothfulwave612
 
-Wxploring marker options.
+Exploring marker options.
 
 Step 1: Create random data.
 Step 2: Create a data list(containing Scatter object defined in graph_objs).
