@@ -10,7 +10,7 @@ import plotly.offline as pyo
 import plotly.graph_objs as go
 
 ## reading in the data
-df = pd.read_csv('Data/2018WinterOlympics.csv')
+df = pd.read_csv('../Data/2018WinterOlympics.csv')
 
 df.head()
 
