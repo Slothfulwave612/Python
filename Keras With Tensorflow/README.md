@@ -55,11 +55,9 @@
 
 ### Linux Setup
 
-* To simplify installation and avoid library conflicts, TensorFlow recommends using a TensorFlow Docker image with GPU support, as this setup only requires the NVIDIA GPU drivers to be installed.
-
-* TensorFlow has a [guide](https://www.tensorflow.org/install/docker) with all the corresponding steps to get this set up.
-
-### Windows Setup
-
-* For Windows, the process is a bit more involved, you can check this [link](https://deeplizard.com/learn/video/IubEtS2JAiY) (scroll down till you find the Window Setup).
+* Let's go for a step-by-step installation:
+    
+    * To find info about graphic-card `hwinfo --gfxcard --short`.
+    
+    * 
 
