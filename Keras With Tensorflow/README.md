@@ -61,19 +61,15 @@
     
     * Install tensorflow-gpu `pip install tensorflow-gpu`.
     
-    * To update or install graphic drivers follow these commands:
-        
-        ```
-        $ sudo apt install nvidia-driver-390
-        $ sudo reboot
-        ```
-        
-    * To see the driver info one can use `nvidia-smi`. 
+    * Then visit this [link](https://www.tensorflow.org/install/gpu) follow along to use gpu alongside tensorflow.
+   
+* To check wheter the GPU is enabled use the following code:
     
-        * If any error occurs try disabling Secure Boot(worked for me) or search any other solution on the internet.
+    ```
+    import tensorflow as tf
+    print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
+    ```
     
-    * Download CUDA Toolkit
-    
-    * Download cudnn.
+* Output should give: Num GPUs Available: 1.    
         
 
