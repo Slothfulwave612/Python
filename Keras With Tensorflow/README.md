@@ -51,7 +51,7 @@
 
 * Check the [TensorFlow website](https://www.tensorflow.org/install/gpu#hardware_requirements) for currently supported versions.
 
-* Going forward, there are different instructions depending on if you’re running your code from a Windows environment or Linux environment. We’ll mostly go into depth on the Windows side, but first let’s touch on Linux.
+* I am using tenserflow version *2.2.0*.
 
 ### Linux Setup
 
@@ -59,5 +59,21 @@
     
     * To find info about graphic-card `hwinfo --gfxcard --short`.
     
-    * 
+    * Install tensorflow-gpu `pip install tensorflow-gpu`.
+    
+    * To update or install graphic drivers follow these commands:
+        
+        ```
+        $ sudo apt install nvidia-driver-390
+        $ sudo reboot
+        ```
+        
+    * To see the driver info one can use `nvidia-smi`. 
+    
+        * If any error occurs try disabling Secure Boot(worked for me) or search any other solution on the internet.
+    
+    * Download CUDA Toolkit
+    
+    * Download cudnn.
+        
 
