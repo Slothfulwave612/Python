@@ -4,7 +4,7 @@
 
 * [Data Processing For Neural Network Training](#data-processing-for-neural-network-training)
   * [Samples and Labels](#samples-and-labels)
-  * [Expected Data Format](#expected-data-format)
+  * [Expected Data Format](#expected-data-fromat)
 
 ## Data Processing For Neural Network Training
 
