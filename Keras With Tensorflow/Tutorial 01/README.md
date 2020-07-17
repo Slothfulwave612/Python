@@ -9,7 +9,7 @@
   * [Data Creation](#data-creation)
   * [Data Processing](#data-processing)
   
-* [ANN With TensorFlow's Keras API](#ann-with-tensorflow's-keras-api)
+* [ANN With TensorFlow's Keras API](#ann-with-tensorflows-keras-api)
   * [Code Setup](#code-setup)
   * [Building a Sequential Model](#building-a-sequential-model)
   * [Layers in The Model](#layers-in-the-model)
