@@ -1,6 +1,6 @@
 # Tutorial 01
 
-## Contents:
+## Contents
 
 * [Data Processing For Neural Network Training](#data-processing-for-neural-network-training)
   * [Samples and Labels](#samples-and-labels)
