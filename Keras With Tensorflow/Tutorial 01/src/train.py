@@ -1,38 +1,41 @@
 '''
 author: @slothfulwave612
 
-In this module we will perform the pre-processing of the data.
+In this module we will be implementing our Sequential model.
 '''
 
-## import required packages/modules
-import numpy as np
-from sklearn.utils import shuffle
-from sklearn.preprocessing import MinMaxScaler
+## import required packages/libraries
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Activation, Dense
 
-def process(train_samples, train_labels):
+def test_gpu():
     '''
-    Function to perform pre-processing.
+    Function to test whether gpu is working or not with tensorflow.
+    '''
+    ## to see the physical devices
+    physical_devices = tf.config.experimental.list_physical_devices('GPU')
 
-    Arguments:
-    train_samples -- list, containing input data.
-    train_labels -- list, containing target data.
+    ## will display number of gpu integrated with tensorflow
+    print(f'Number of GPU availabe: {len(physical_devices)}')
+
+    ## to enable memory growth for a PhysicalDevice
+    tf.config.experimental.set_memory_growth(physical_devices[0], True)
+
+
+def create_model():
+    '''
+    Function to create Sequential model.
 
     Returns:
-    scaled_train_samples -- numpy array, containing normalized values.
-    train_labels -- numpy array, containing target data.
+    model -- Sequential model.
     '''
-    ## convert list to numpy array
-    train_samples = np.array(train_samples)
-    train_labels = np.array(train_labels)
 
-    ## shuffle the data
-    train_samples, train_labels = shuffle(train_samples, train_labels)
+    ## Sequential Model
+    model = Sequential(layers=[
+        Dense(units=16, input_shape=(1,), activation='relu'),
+        Dense(units=32, activation='relu'),
+        Dense(units=1, activation='sigmoid')
+    ])
 
-    ## MinMaxScalar object
-    scaler = MinMaxScaler(feature_range=(0, 1))
-
-    ## scale train_samples
-    scaled_train_samples = scaler.fit_transform(train_samples.reshape(-1, 1))
-
-    return scaled_train_samples, train_labels
-
+    return model
