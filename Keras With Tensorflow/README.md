@@ -55,7 +55,7 @@
 
 ### Linux Setup
 
-* Let's go for a step-by-step installation:
+* Follow these steps:
     
     * To find info about graphic-card `hwinfo --gfxcard --short`.
     
