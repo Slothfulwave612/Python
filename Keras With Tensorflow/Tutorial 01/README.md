@@ -13,6 +13,17 @@
   * [Code Setup](#code-setup)
   * [Building a Sequential Model](#building-a-sequential-model)
   * [Layers in The Model](#layers-in-the-model)
+  
+* [Training ANN](#training-ann)  
+  * [Compiling The Model](#compiling-the-model)
+  * [Training The Model](#training-the-model)
+  
+* [Building A Validation Set](#building-a-validation-set)  
+  * [What is a Validation Set?](#what-is-a-validation-set?)
+  * [Creating a Validation Set](#creating-a-validation-set)
+  * [Interpret Validation Metrics](#interpret-validation-metrics)
+
+* **Note**: You can use src/run_script.py to run each model that is being discussed in this tutorial, for exploration part you can go to notebooks/explore.ipynb
 
 ## Data Processing For Neural Network Training
 
@@ -101,7 +112,7 @@
   ## code present in src/create_data.py
   
   ## outliers
-    for i in range(50):
+    for _ in range(50):
         ## the ~5% young individuals who did experienced side effects
         random_young = randint(13, 64)
         train_samples.append(random_young)      ## the age of the individual [13, 64]
@@ -112,7 +123,7 @@
         train_samples.append(random_old)        ## the age of the individual [65, 100]
         train_labels.append(0)                  ## 0 -- did not experienced side effects
 
-    for i in range(1000):
+    for _ in range(1000):
         ## the 95% young individuals who did not experienced side effects
         random_young = randint(13, 64)
         train_samples.append(random_young)      ## the age of the individual [13, 64]
@@ -302,3 +313,254 @@
         Trainable params: 609
         Non-trainable params: 0
   ```
+
+## Training ANN
+
+* In this section, we’ll demonstrate how to train an artificial neural network using the Keras API integrated within TensorFlow.
+
+### Compiling the Model
+
+* The first thing we need to do to get the model ready for training is call the `compile()` function on it.
+  
+  ```python
+  ## code present in src/train.py
+  
+  ## compiling the model
+  model.compile(optimizer=Adam(learning_rate=0.0001), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+  ```
+  
+* This function configures the model for training and expects a number of parameters. First, we specify the `optimizer` `Adam`. `Adam` accepts an optional parameter `learning_rate`, which we’ll set to `0.0001`.  
+
+* The next parameter we specify is `loss`. We’ll be using `binary_crossentropy`, given that our labels are either 0 or 1(binary).
+
+* The last parameter we specify in `compile()` is `metrics`. This parameter expects a list of metrics that we’d like to be evaluated by the model during training and testing. We’ll set this to a list that contains the string `'accuracy'`.
+
+### Training the Model
+
+* Now that the model is compiled, we can train it using the `fit()` function.
+  
+  ```python
+  ## code present in src/train.py
+  
+  ## training the model
+  model.fit(x=scaled_train_samples, y=train_labels, batch_size=10, epochs=30, verbose=2)
+  ```
+
+* The first item that we pass in to the `fit()` function is the training set x, which will be our `scaled_train_samples`.
+
+* The next parameter is the label for training set `y`, which will be our `train_labels`.
+
+* We then have specified the `batch_size` to be `10` and `epochs` to be 30.
+  
+  * **Note:** That an epoch is a single pass of all the data to the network.
+  
+* Lastly we specify, `verbose=2`. This specify how much output we want on the console. Verbosity ranges from 0 to 2, hence here we are getting the max verbose level.
+
+* The output of the `fit()` function looks like this:
+  
+  ```
+  Epoch 1/30
+  210/210 - 1s - loss: 0.7017 - accuracy: 0.4305
+  Epoch 2/30
+  210/210 - 1s - loss: 0.6818 - accuracy: 0.6538
+  Epoch 3/30
+  210/210 - 1s - loss: 0.6654 - accuracy: 0.6962
+  Epoch 4/30
+  210/210 - 1s - loss: 0.6458 - accuracy: 0.7319
+  Epoch 5/30
+  210/210 - 1s - loss: 0.6265 - accuracy: 0.7529
+  Epoch 6/30
+  210/210 - 1s - loss: 0.6055 - accuracy: 0.7781
+  Epoch 7/30
+  210/210 - 1s - loss: 0.5853 - accuracy: 0.8029
+  Epoch 8/30
+  210/210 - 1s - loss: 0.5651 - accuracy: 0.8214
+  Epoch 9/30
+  210/210 - 1s - loss: 0.5431 - accuracy: 0.8310
+  Epoch 10/30
+  210/210 - 1s - loss: 0.5205 - accuracy: 0.8424
+  Epoch 11/30
+  210/210 - 1s - loss: 0.4980 - accuracy: 0.8576
+  Epoch 12/30
+  210/210 - 1s - loss: 0.4759 - accuracy: 0.8700
+  Epoch 13/30
+  210/210 - 1s - loss: 0.4546 - accuracy: 0.8819
+  Epoch 14/30
+  210/210 - 1s - loss: 0.4345 - accuracy: 0.8843
+  Epoch 15/30
+  210/210 - 1s - loss: 0.4158 - accuracy: 0.8962
+  Epoch 16/30
+  210/210 - 1s - loss: 0.3988 - accuracy: 0.8986
+  Epoch 17/30
+  210/210 - 1s - loss: 0.3831 - accuracy: 0.9000
+  Epoch 18/30
+  210/210 - 1s - loss: 0.3689 - accuracy: 0.9067
+  Epoch 19/30
+  210/210 - 1s - loss: 0.3561 - accuracy: 0.9095
+  Epoch 20/30
+  210/210 - 1s - loss: 0.3448 - accuracy: 0.9124
+  Epoch 21/30
+  210/210 - 1s - loss: 0.3350 - accuracy: 0.9205
+  Epoch 22/30
+  210/210 - 1s - loss: 0.3262 - accuracy: 0.9205
+  Epoch 23/30
+  210/210 - 1s - loss: 0.3185 - accuracy: 0.9186
+  Epoch 24/30
+  210/210 - 1s - loss: 0.3118 - accuracy: 0.9219
+  Epoch 25/30
+  210/210 - 1s - loss: 0.3057 - accuracy: 0.9248
+  Epoch 26/30
+  210/210 - 1s - loss: 0.3004 - accuracy: 0.9248
+  Epoch 27/30
+  210/210 - 1s - loss: 0.2957 - accuracy: 0.9281
+  Epoch 28/30
+  210/210 - 1s - loss: 0.2916 - accuracy: 0.9281
+  Epoch 29/30
+  210/210 - 1s - loss: 0.2879 - accuracy: 0.9286
+  Epoch 30/30
+  210/210 - 1s - loss: 0.2843 - accuracy: 0.9314
+  ```
+  
+* We can see corresponding output for each of the `30` epochs. Judging by the loss and accuracy, we can see that both metrics steadily improves over time with accuracy reaching almost 93% and loss steadily decreasing.
+
+## Building A Validation Set
+
+* In this section, we’ll demonstrate how to use TensorFlow's Keras API to create a validation set on-the-fly during training.
+
+### What is a Validation Set?
+
+* Recall that we previously built a training set on which we trained our model. With each epoch that our model is trained, the model will continue to learn the features and characteristics of the data in this training set.
+
+* The hope is that later we can take this model, apply it to new data, and have the model accurately predict on data that it hasn’t seen before based solely on what it learned from the training set.
+
+* Before training begins, we can choose to remove a portion of the training set and place it in a validation set. Then during training, the model will train only on the training set, and it will validate by evaluating the data in the validation set.
+
+* During each epoch we will see not only the loss and accuracy results for the training set, but also for the validation set.
+
+* This allows us to see how well the model is generalizing on data it wasn't trained on.
+
+* This also helps us see whether or not the model is overfitting. 
+
+* Overfitting occurs when the model learns the specifics of the training data and is unable to generalize well on data that it wasn't trained on.
+  
+   * One way to discover overfitting is when your train-accuracy is better than test-accuracy or in other words your test-accuracy is very poor than your train-accuracy, you can say there is some amount of overfitting.
+   
+### Creating a Validation Set   
+
+* There are two ways to create a validation set:
+  
+  1. *Manually Create Validation Set*
+  2. *Create Validation Set with Keras*
+
+* **Manually Create Validation Set**:
+  
+  * The first way is to create a data structure to hold a validation set, and place data directly in that structure in the same nature we did for the training set.
+  
+  * This data structure should be a tuple `valid_set = (x_val, y_val)` of Numpy arrays or tensors, where `x_val` is a numpy array or tensor containing validation samples, and `y_val` is a numpy array or tensor containing validation labels.
+  
+  * When we call `model.fit()`, we would pass in the validation set in addition to the training set. We pass the validation set by specifying the `validation_data` parameter. For manual splitting of the data set look for `train_valid_split()` function in `src/processing.py` file.
+  
+  ```python
+  ## code pesent in src/train.py
+  
+  model.fit(
+     x=scaled_train_samples
+   , y=train_labels
+   , validation_data=valid_set
+   , batch_size=10
+   , epochs=30
+   , verbose=2
+  )
+  ```
+  
+  * **Create Validation Set with Keras**:
+  
+  * There is another way to create a validation set, and it saves a step!
+  
+  * If we don’t already have a specified validation set created, then when we call `model.fit()`, we can set a value for the `validation_split` parameter. It expects a fractional number between `0` and `1`. Suppose that we set this parameter to `0.1`(meaning 10% of training data will go to validation data).
+  
+  ```python
+  ## coed present in src/train.py
+  
+  model.fit(
+      x=scaled_train_samples
+    , y=train_labels
+    , validation_split=0.1
+    , batch_size=10
+    , epochs=30
+    , verbose=2
+  )
+  ```
+  
+  * **Note**: Note that the `fit()` function shuffles the data before each epoch by default. When specifying the `validation_split` parameter, however, the validation data is selected from the last samples in the x and y data before shuffling.
+  
+### Interpret Validation Metrics
+
+* Now, regardless of which method we use to create validation data, when we call `model.fit()`, then in addition to `loss` and `accuracy` being displayed for each epoch, we will now also see `val_loss` and `val_acc` to track the loss and accuracy on the validation set.
+
+* Output will be something like this(values can differ because of randomness in the data):
+  
+  ```
+  Epoch 1/30
+  189/189 - 0s - loss: 0.6914 - accuracy: 0.4720 - val_loss: 0.6850 - val_accuracy: 0.4667
+  Epoch 2/30
+  189/189 - 0s - loss: 0.6651 - accuracy: 0.6048 - val_loss: 0.6655 - val_accuracy: 0.5429
+  Epoch 3/30
+  189/189 - 0s - loss: 0.6442 - accuracy: 0.6545 - val_loss: 0.6499 - val_accuracy: 0.5714
+  Epoch 4/30
+  189/189 - 0s - loss: 0.6226 - accuracy: 0.7079 - val_loss: 0.6290 - val_accuracy: 0.6143
+  Epoch 5/30
+  189/189 - 0s - loss: 0.5993 - accuracy: 0.7455 - val_loss: 0.6101 - val_accuracy: 0.6667
+  Epoch 6/30
+  189/189 - 0s - loss: 0.5773 - accuracy: 0.7693 - val_loss: 0.5905 - val_accuracy: 0.7048
+  Epoch 7/30
+  189/189 - 0s - loss: 0.5548 - accuracy: 0.7799 - val_loss: 0.5687 - val_accuracy: 0.7333
+  Epoch 8/30
+  189/189 - 0s - loss: 0.5318 - accuracy: 0.8048 - val_loss: 0.5469 - val_accuracy: 0.7667
+  Epoch 9/30
+  189/189 - 0s - loss: 0.5085 - accuracy: 0.8212 - val_loss: 0.5236 - val_accuracy: 0.7762
+  Epoch 10/30
+  189/189 - 0s - loss: 0.4854 - accuracy: 0.8365 - val_loss: 0.5010 - val_accuracy: 0.7905
+  Epoch 11/30
+  189/189 - 0s - loss: 0.4630 - accuracy: 0.8471 - val_loss: 0.4778 - val_accuracy: 0.8238
+  Epoch 12/30
+  189/189 - 0s - loss: 0.4418 - accuracy: 0.8603 - val_loss: 0.4567 - val_accuracy: 0.8476
+  Epoch 13/30
+  189/189 - 0s - loss: 0.4217 - accuracy: 0.8725 - val_loss: 0.4372 - val_accuracy: 0.8524
+  Epoch 14/30
+  189/189 - 1s - loss: 0.4032 - accuracy: 0.8804 - val_loss: 0.4162 - val_accuracy: 0.8714
+  Epoch 15/30
+  189/189 - 0s - loss: 0.3858 - accuracy: 0.8878 - val_loss: 0.3977 - val_accuracy: 0.8810
+  Epoch 16/30
+  189/189 - 0s - loss: 0.3702 - accuracy: 0.9000 - val_loss: 0.3830 - val_accuracy: 0.8810
+  Epoch 17/30
+  189/189 - 0s - loss: 0.3564 - accuracy: 0.8989 - val_loss: 0.3661 - val_accuracy: 0.9143
+  Epoch 18/30
+  189/189 - 0s - loss: 0.3441 - accuracy: 0.9085 - val_loss: 0.3533 - val_accuracy: 0.9143
+  Epoch 19/30
+  189/189 - 0s - loss: 0.3334 - accuracy: 0.9122 - val_loss: 0.3422 - val_accuracy: 0.9286
+  Epoch 20/30
+  189/189 - 0s - loss: 0.3241 - accuracy: 0.9143 - val_loss: 0.3316 - val_accuracy: 0.9286
+  Epoch 21/30
+  189/189 - 0s - loss: 0.3158 - accuracy: 0.9206 - val_loss: 0.3236 - val_accuracy: 0.9286
+  Epoch 22/30
+  189/189 - 0s - loss: 0.3085 - accuracy: 0.9206 - val_loss: 0.3156 - val_accuracy: 0.9286
+  Epoch 23/30
+  189/189 - 0s - loss: 0.3023 - accuracy: 0.9206 - val_loss: 0.3082 - val_accuracy: 0.9286
+  Epoch 24/30
+  189/189 - 0s - loss: 0.2969 - accuracy: 0.9265 - val_loss: 0.3016 - val_accuracy: 0.9381
+  Epoch 25/30
+  189/189 - 0s - loss: 0.2923 - accuracy: 0.9265 - val_loss: 0.2954 - val_accuracy: 0.9381
+  Epoch 26/30
+  189/189 - 0s - loss: 0.2882 - accuracy: 0.9291 - val_loss: 0.2919 - val_accuracy: 0.9381
+  Epoch 27/30
+  189/189 - 0s - loss: 0.2846 - accuracy: 0.9291 - val_loss: 0.2857 - val_accuracy: 0.9476
+  Epoch 28/30
+  189/189 - 0s - loss: 0.2815 - accuracy: 0.9323 - val_loss: 0.2829 - val_accuracy: 0.9381
+  Epoch 29/30
+  189/189 - 0s - loss: 0.2789 - accuracy: 0.9312 - val_loss: 0.2789 - val_accuracy: 0.9476
+  Epoch 30/30
+  189/189 - 0s - loss: 0.2763 - accuracy: 0.9323 - val_loss: 0.2767 - val_accuracy: 0.9381
+  ```
+  
+* We can now see not only how well our model is learning the features of the training data, but also how well the model is generalizing to new, unseen data from the validation set.   
