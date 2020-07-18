@@ -22,7 +22,7 @@ def data():
     train_labels = []           ## target data
 
     ## outliers
-    for i in range(50):
+    for _ in range(50):
         ## the ~5% young individuals who did experienced side effects
         random_young = randint(13, 64)
         train_samples.append(random_young)      ## the age of the individual [13, 64]
@@ -33,7 +33,7 @@ def data():
         train_samples.append(random_old)        ## the age of the individual [65, 100]
         train_labels.append(0)                  ## 0 -- did not experienced side effects
 
-    for i in range(1000):
+    for _ in range(1000):
         ## the 95% young individuals who did not experienced side effects
         random_young = randint(13, 64)
         train_samples.append(random_young)      ## the age of the individual [13, 64]

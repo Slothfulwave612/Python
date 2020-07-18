@@ -8,6 +8,7 @@ In this module we will be implementing our Sequential model.
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Activation, Dense
+from tensorflow.keras.optimizers import Adam
 
 def test_gpu():
     '''
@@ -37,5 +38,51 @@ def create_model():
         Dense(units=32, activation='relu'),
         Dense(units=1, activation='sigmoid')
     ])
+
+    return model
+
+def train_model(model, x_train, y_train):
+    '''
+    Function to compile and train the model.
+
+    Argument:
+    model -- Sequential model.
+    x_train -- input data.
+    y_train -- target labels.
+
+    Returns:
+    model -- Sequential model.
+    '''
+    ## compiling the model
+    model.compile(optimizer=Adam(learning_rate=0.0001), loss='binary_crossentropy', metrics=['accuracy'])
+
+    ## training the model
+    model.fit(x=x_train, y=y_train, batch_size=10, epochs=30, verbose=2)
+
+    return model
+
+def train_valid_model(model, x_train, y_train, valid_set=None, per=None):
+    '''
+    Function to compile and train the model(with validation set).
+
+    Arguments:
+    model -- Sequential model.
+    x_train -- input data.
+    y_train -- target labels.
+    valid_set -- validation set, default set to None --> tuple (valid_samples, valid_targets).
+    per -- float, fraction value for splitting.
+           e.g. if per=0.1, that means 10% of data will be in validation set rest in train set.
+
+    Returns:
+    model -- Sequential model.
+    '''
+    ## compiling the model
+    model.compile(optimizer=Adam(learning_rate=0.0001), loss='binary_crossentropy', metrics=['accuracy'])
+
+    ## training the model and evaluating on validation set
+    if valid_set:
+        model.fit(x=x_train, y=y_train, validation_data=valid_set, batch_size=10, epochs=30, verbose=2)
+    else:
+        model.fit(x=x_train, y=y_train, validation_split=per, batch_size=10, epochs=30, verbose=2)
 
     return model
