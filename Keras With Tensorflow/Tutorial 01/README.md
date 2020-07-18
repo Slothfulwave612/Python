@@ -19,7 +19,7 @@
   * [Training The Model](#training-the-model)
   
 * [Building A Validation Set](#building-a-validation-set)  
-  * [What is a Validation Set?](#what-is-a-validation-set?)
+  * [What is a Validation Set?](#what-is-a-validation-set)
   * [Creating a Validation Set](#creating-a-validation-set)
   * [Interpret Validation Metrics](#interpret-validation-metrics)
 
