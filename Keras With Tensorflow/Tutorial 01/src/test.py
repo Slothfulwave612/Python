@@ -1,14 +1,16 @@
 '''
 author: @slothfulwave612
 
-Python model for testing and evaluating
+Python module for testing, evaluation and saving the model.
 '''
 
 ## importing necessary libraries
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, accuracy_score
+from tensorflow.keras.models import load_model, model_from_json
 import itertools
+import json
 
 def predict(model, test_samples, test_labels):
     '''
@@ -76,5 +78,61 @@ def plot_confusion_matrix(classes, y_true, y_pred, cmap=plt.cm.Blues, acc=False,
     else:
         plt.show()
 
+def save_model(model, model_name, value):
+    '''
+    Function to save the model.
 
+    Arguments:
+    model -- a Sequential model.
+    model_name -- str, the name of the model.
+    value -- int value.
+             0 -- saving the model entirely.
+             1 -- saving only the architecture.
+             2 -- saving only the weights.
+    '''
+
+    if value == 0:
+        ## saving the entire model
+        model.save(f'../models/{model_name}')
+
+    elif value == 1:
+        ## saving only the architecture
+        json_val = model.to_json()
+
+        with open(f'../models/{model_name}', 'w') as model_file:            
+            model_file.write(json_val)
+
+    elif value == 2:
+        ## saving only the weights
+        model.save_weights(f'../models/{model_name}')
     
+def load_models(model_name, value, model=None):
+    '''
+    Function to load model.
+
+    Arguments:
+    model_name -- str, the name of the model.
+    value -- int value.
+             0 -- loading the model entirely.
+             1 -- loading only the architecture.
+             2 -- loading only the weights.
+    model -- a model should be passed only when value == 2, i.e. when loading weights
+
+    Returns:
+    model -- the save model.
+    '''
+    if value == 0:
+        ## loading the entire model
+        model = load_model(f'../models/{model_name}')
+    
+    elif value == 1:
+        ## loading only the architecture
+        with open(f'../models/{model_name}', 'r') as model_file:         
+            model = model_file.read()
+        model = model_from_json(model)
+
+    elif value == 2:
+        ## loading only the weights
+        model.load_weights(f'../models/{model_name}')
+    
+    return model
