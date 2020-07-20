@@ -1,4 +1,12 @@
-# Tutorial 01
+# Getting Started With Keras
+
+## Overview
+
+* Here we will be building a simple neural network with Keras integrated with TensorFlow.
+
+* We will be generating random data for this tutorial.
+
+* Prerequisite: Understanding of basic neural network and it's working.
 
 ## Contents
 
