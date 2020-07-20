@@ -22,6 +22,11 @@
   * [What is a Validation Set?](#what-is-a-validation-set)
   * [Creating a Validation Set](#creating-a-validation-set)
   * [Interpret Validation Metrics](#interpret-validation-metrics)
+  
+* [Save and Load A Model](#save-and-load-a-model)
+  * [Saving And Location The Model In Its Entirety](#saving-and-location-the-model-in-its-entirety)
+  * [Saving And Loading Only The Architecture Of The Model](#saving-and-loading-only-the-architecture-of-the-model)
+  * [Saving And Loading The Weights Of The Model](#saving-and-loading-the-weights-of-the-model)
 
 * **Note**: You can use src/run_script.py to run each model that is being discussed in this tutorial, for exploration part you can go to notebooks/explore.ipynb
 
@@ -564,3 +569,92 @@
   ```
   
 * We can now see not only how well our model is learning the features of the training data, but also how well the model is generalizing to new, unseen data from the validation set.   
+
+## Save and Load A Model
+
+* In this episode, we’ll demonstrate how to save and load a `tf.keras.Sequential` neural network.
+
+* There are a few different ways to save a Keras model. The multiple mechanisms each save the model differently, so we'll check them all out.
+
+### Saving And Location The Model In Its Entirety
+
+* If we want to save a model at its current state after it was trained so that we could make use of it later, we can call the `save()` function on the model.
+
+* To `save()`, we pass in the file path and name of the file we want to save the model to with an `h5` extension.
+
+  ```python
+  ## code present in src/test.py
+  
+  ## saving the entire model
+  model.save('../models/model_0.h5')
+  ```
+  
+* This method of saving will save everything about the model – the architecture, the weights, the optimizer, the state of the optimizer, the learning rate, the loss, etc.
+
+* We can load this model by using `load_model()` function. 
+
+  ```python
+  ## code present in src/test.py
+  
+  ## loading the entire model
+  model = load_model(f'../models/{model_name}')
+  ```
+  
+* We can verify that the loaded model has the same architecture and weights as the saved model by calling `summary()`.
+
+* We can also inspect attributes about the model, like the optimizer and loss by calling `model.optimizer` and `model.loss` on the loaded model and compare the results to the previously saved model.
+
+### Saving And Loading Only The Architecture Of The Model
+
+* There is another way we save only the architecture of the model. This will not save the model weights, configurations, optimizer, loss or anything else. This only saves the architecture of the model.
+
+* We can do this by calling model.to_json(). This will save the architecture of the model as a JSON string.
+
+  ```python
+  ## code present in /src/test.py
+  
+  ## saving only the architecture
+        json_val = model.to_json()
+
+        with open(f'../models/{model_name}', 'w') as model_file:
+            model_file.write(json_val)
+  ```
+
+* Now that we have this saved, we can create a new model from it. First we’ll import the needed `model_from_json` function, and then we can load the model architecture.
+
+  ```python
+  ## code present in /src/test.py
+  
+  ## loading only the architecture
+  with open(f'../models/{model_name}', 'r') as model_file:  
+      model = model_file.read()
+  model = model_from_json(model)
+  ```
+
+* By printing the summary of the model, we can verify that the new model has the same architecture of the model that was previously saved.
+
+* **Note:-** we can also use this same approach to saving and loading the model architecture to and from a YAML string. To do so, we use the functions `to_yaml()` and `model_from_yaml()` in the same fashion as we called the json functions.
+
+### Saving And Loading The Weights Of The Model
+
+* The last saving mechanism is where we will only saves the weights of the model.
+
+* We can do this by calling `model.save_weights()` and passing in the path and file name to save the weights to with an `h5` extension.
+
+  ```python
+  ## code present in src/test.py
+  
+  ## saving only the weights
+  model.save_weights(f'../models/{model_name}')
+  ```
+
+* At a later point, we could then load the saved weights in to a new model, but the new model will need to have the same architecture as the old model before the weights can be saved.
+
+  ```python
+  ## code present in src/test.py
+  
+  ## loading only the weights
+  model.load_weights(f'../models/{model_name}')
+  ```
+  
+* **Note:** For implementation of these three ways of saving and loading models you can check */notebooks/explore.ipynb*.  
