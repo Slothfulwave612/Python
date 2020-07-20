@@ -8,6 +8,26 @@
 
 * Prerequisite: Understanding of basic neural network and it's working.
 
+## Directory Tree
+
+```
+|__ models
+|
+|__ notebooks
+|  |__ explore.ipynb
+|
+|__ plots
+|
+|__ src
+|  |__ create_data.py
+|  |__ processing.py
+|  |__ run_script.py
+|  |__ test.py
+|  |__ train.py
+|
+|__ README.md
+```
+
 ## Contents
 
 * [Data Processing For Neural Network Training](#data-processing-for-neural-network-training)
