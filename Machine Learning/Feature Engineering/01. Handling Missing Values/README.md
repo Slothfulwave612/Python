@@ -15,6 +15,8 @@
   * [Drop Missing Values](#drop-missing-values)
   * [Imputation](#imputation)
     * [Mean Median Mode Replacement](#mean-meadian-mode-replacement)
+    * [Random Sample Imputation](#random-sample-imputation)
+    * [Capturing NaN Values With A New Features](#capturing-nan-values-with-a-new-features)
 
 ## Overview
 
@@ -186,3 +188,28 @@
 * **Disadvantage:**  
   
   * In every situation randomness won't work.
+
+#### Capturing NaN Values With A New Features
+
+* Here we make a new columns which will capture the NaN values.
+
+* The new column will have 1 where the NaN value is present and 0 where it's not present.
+
+* **Advantage:**
+  
+  * Easy to implement.
+  
+  * Captures the importance of missing value.
+  
+* **Disadvantage:**
+  
+  * Creating additional features(curse of dimensionality)
+  
+#### End of Distribution Imputation  
+
+* Here, we pick the values from end of the distribution and fill NaN values with these values.
+
+* For a normal distribution values which are greater than and equal to *mean + 3*std* are the extreme values.
+
+* This will remove the outliers from the data.
+
