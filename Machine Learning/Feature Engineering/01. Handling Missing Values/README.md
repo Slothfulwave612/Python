@@ -11,14 +11,13 @@
   * [Missing At Random](#missing-at-random)
   * [Missing Not At Random](#missing-not-at-random)
 
-* [Techniques of Dealing With Missing Data](#techniques-for-dealing-with-missing-data)
+* [Techniques of Dealing With Missing Data](#techniques-of-dealing-with-missing-data)
   * [Drop Missing Values](#drop-missing-values)
   * [Imputation](#imputation)
     * [Mean Median Mode Replacement](#mean-meadian-mode-replacement)
     * [Random Sample Imputation](#random-sample-imputation)
     * [Capturing NaN Values With A New Features](#capturing-nan-values-with-a-new-features)
     * [End of Distribution Imputation](#end-of-distribution-imputation)
-    * [Arbitrary Value Imputation](#arbitrary-value-imputation)
 
 ## Overview
 
