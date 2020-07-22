@@ -10,6 +10,8 @@
 
 * [Processing The Data](#processing-the-data)
 
+* [Visualize The Data](#visualize-the-data)
+
 ## Directory Tree
 
 ```
@@ -103,3 +105,82 @@
 
 * We also specify `shuffle=False` only for `test_batches`. That's because, later when we plot the evaluation results from the model to a confusion matrix, we'll need to able to access the unshuffled labels for the test set. By default, the data sets are shuffled.
 
+* **Note:** In the case where you do not know the labels for the test data, you will need to modify the `test_batches` variable. Specifically, the change will be to set the parameters `classes = None` and `class_mode = None` in `flow_from_directory()`. 
+
+## Visualize The Data 
+
+* We now call `next(train_batches)` to generate a batch of images and labels from the training set. 
+
+* **Note:** That the size of this batch is determined by the batch_size we set when we created train_batches. 
+
+  ```python
+  ## code present in notebooks/explore.ipynb
+  
+  ## for plotting images
+  imgs, labels = next(train_batches)
+  plot_images(imgs)
+  print(labels)
+  ```
+  
+* Now here is how plotting is done.
+  
+  ```python
+  ## code present in src/processing.py
+  
+  ## create subplots
+  _, axes = plt.subplots(nrows=1, ncols=10, figsize=(20,20))
+
+  axes = axes.flatten()
+
+  ## plotting image
+  for img, ax in zip(image_arr, axes):
+      ax.imshow(img)
+      ax.axis('off')
+
+  plt.tight_layout()
+  plt.show()
+  ```
+
+* This is what the first processed random batch from the training set looks like.
+  
+  ![scr](https://user-images.githubusercontent.com/33928040/88193342-2f8bc200-cc5b-11ea-800e-6d4d4a09e119.png)
+  
+* Notice that the color appears to be distorted. This has to do with the VGG16 processing we applied to the data sets.
+
+* **Note:** Dogs are represented with the `one-hot encoding` of `[0,1]`, and cats are represented by `[1,0]`. 
+
+### Building A Simple CNN
+
+* To build the CNN, we’ll use a Keras `Sequential` model.
+
+  ```python
+  ## create model
+  model = Sequential(
+      [
+          Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding='same', input_shape=(224, 224, 3)),
+          MaxPool2D(pool_size=(2, 2), strides=2),
+          Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding='same'),
+          MaxPool2D(pool_size=(2, 2), strides=2),
+          Flatten(),
+          Dense(units=1, activation='sigmoid')
+      ]
+  )
+  ```
+  
+* The first layer in the model is a 2-dimensional convolutional layer. This layer will have `32` output filters each with a kernel size of `3x3`, and we’ll use the `relu` activation function.   
+
+* **Note:** Note that the choice for the number of output filters specified is arbitrary, and the chosen kernel size of `3x3` is generally a very common size to use. 
+
+* We enable zero-padding by specifying `padding = 'same'`.
+
+* On the first layer only, we also specify the `input_shape`, which is the shape of our data. Our images are `224` pixels high and `224` pixels wide and have `3` color channels: RGB. This gives us an `input_shape` of `(224,224,3)`. 
+
+* We then add a max pooling layer to pool and reduce the dimensionality of the data.
+
+* We follow this by adding another convolutional layer with the exact specs as the earlier one, except for this second `Conv2D` layer has `64` filters. The choice of `64` here is again arbitrary, but the general choice of having more filters in later layers than in earlier ones is common. 
+
+* This layer is again followed by the same type of `MaxPool2D` layer. 
+
+* We then `Flatten` the output from the convolutional layer and pass it to a `Dense` layer. This `Dense` layer is the output layer of the network, and so it has 1 nodes, and we are using the softmax activation function.
+
+* 
