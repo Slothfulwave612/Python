@@ -17,6 +17,8 @@
     * [Mean Median Mode Replacement](#mean-meadian-mode-replacement)
     * [Random Sample Imputation](#random-sample-imputation)
     * [Capturing NaN Values With A New Features](#capturing-nan-values-with-a-new-features)
+    * [End of Distribution Imputation](#end-of-distribution-imputation)
+    * [Arbitrary Value Imputation](#arbitrary-value-imputation)
 
 ## Overview
 
@@ -144,8 +146,6 @@
   * *Random Sample Imputation*
   * *Capturing NaN values with a new feature* 
   * *End of Distribution Imputation*
-  * *Arbitrary Imputation*
-  * *Frequency Categories Imputation*
   
 * **Note:** You can see the implementation of these technique in `explore.ipynb` and the functions are defined in `imputation.py`. Dataset used is `titanic`.
   
@@ -212,4 +212,3 @@
 * For a normal distribution values which are greater than and equal to *mean + 3*std* are the extreme values.
 
 * This will remove the outliers from the data.
-
