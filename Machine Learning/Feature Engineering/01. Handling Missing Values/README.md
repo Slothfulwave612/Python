@@ -1,5 +1,7 @@
 # Handling Missing Values
 
+* **Note:** These notes are made from different youtube videos, github repos and medium articles.
+
 ## Content
 
 * [Overview](#overview)
@@ -10,8 +12,9 @@
   * [Missing Not At Random](#missing-not-at-random)
 
 * [Techniques of Dealing With Missing Data](#techniques-for-dealing-with-missing-data)
-  * [Drop Missing Values/Columns/Rows](#drop-missing-values-columns-rows)
+  * [Drop Missing Values](#drop-missing-values)
   * [Imputation](#imputation)
+    * [Mean Median Mode Replacement](#mean-meadian-mode-replacement)
 
 ## Overview
 
@@ -111,7 +114,7 @@
   
   * *Imputation*
   
-### Drop Missing Values/Columns/Rows
+### Drop Missing Values
 
 * The simplest way to go forward is to drop the columns/rows for which the data is not available.
 
@@ -133,4 +136,53 @@
 
 * Imputation means to replace or fill the missing data with some value.
 
-#### 
+* Some of the imputation techniques that we will talk about are:
+  
+  * *Mean/Median/Mode Replacement*
+  * *Random Sample Imputation*
+  * *Capturing NaN values with a new feature* 
+  * *End of Distribution Imputation*
+  * *Arbitrary Imputation*
+  * *Frequency Categories Imputation*
+  
+* **Note:** You can see the implementation of these technique in `explore.ipynb` and the functions are defined in `imputation.py`. Dataset used is `titanic`.
+  
+#### Mean Meadian Mode Replacement
+
+* Mean/median/mode imputation has the assumption that the data are missing completely at random(MCAR). 
+
+* **Which is better, replacement by mean and replacement by median?**:
+  
+  * It always depends on your data and your task.
+  
+  * If there is a dataset that have great outliers, go for median. E.x.: 99% of household income is below 100, and 1% is above 500, else you can use mean.
+
+* **Advantages:**
+  
+  * Easy to implement.
+  
+  * Robust to outliers.
+  
+  * A faster way of filling the NaN values.
+  
+* **Disadvantages:**  
+  
+  * Changes or distort the original variance/standard-deviation.
+  
+  * Impacts correlation.
+  
+#### Random Sample Imputation
+
+* In random sample imputation, we take random observation from the dataset and we use it to fill the NaN values.
+
+* It also assumes that the data are missing completely at random(MCAR).
+
+* **Advantages:**
+  
+  * Easy to implement.
+  
+  * Less distortion in variance/standard-deviation.
+  
+* **Disadvantage:**  
+  
+  * In every situation randomness won't work.
