@@ -9,6 +9,10 @@
   * [Missing At Random](#missing-at-random)
   * [Missing Not At Random](#missing-not-at-random)
 
+* [Techniques of Dealing With Missing Data](#techniques-for-dealing-with-missing-data)
+  * [Drop Missing Values/Columns/Rows](#drop-missing-values-columns-rows)
+  * [Imputation](#imputation)
+
 ## Overview
 
 * **Missing data** are defined as values that are not available and that would be meainingful if they are observed.
@@ -98,3 +102,35 @@
   * This makes sense because if you have more overdue books you are less likely to tell me about it because it's kind of embrassing fact about your life ;).
   
   * So the general idea is the more overdue books you truly have the less likely you are going to tell me about that number and the more likely I am to have a missing value.
+
+## Techniques of Dealing With Missing Data
+
+* There are few techniques which can help you deal with missing values in your dataset:
+  
+  * *Drop Missing Values/Columns/Rows*
+  
+  * *Imputation*
+  
+### Drop Missing Values/Columns/Rows
+
+* The simplest way to go forward is to drop the columns/rows for which the data is not available.
+
+* But before making the decision to drop missing value/rows/columns, you have to consider a few things.
+
+* If we drop the rows our total number of data points to train our model will go down which can reduce the model performance.
+  
+  * Do this only if you have large number of training examples and the rows with missing data are not very high in number.
+  
+* Dropping the column altogether will remove a feature from our model i.e the model predictions will be independent of that column/s.  
+  
+  * Drop columns if the data is missing for more than 60% observations but only if that variable is insignificant.
+  
+* In general dropping data is not a good approach in most cases since you loose a lot of potentially useful information, and we have better techniques to deal with missing data
+
+### Imputation
+
+* A slightly better approach towards handling missing data is **imputation**. 
+
+* Imputation means to replace or fill the missing data with some value.
+
+#### mai hu jiyan
