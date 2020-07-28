@@ -12,6 +12,10 @@
 
 * [Visualize The Data](#visualize-the-data)
 
+* [Building A Simple CNN](#building-a-simple-cnn)
+
+* [Training The Model](#training-the-model)
+
 ## Directory Tree
 
 ```
@@ -39,36 +43,51 @@
   ```python
   ## code present in src/processing.py
   
+  ## changing the path
   os.chdir(path)
 
+  ## creating split
   if os.path.isdir('train') is False:
-      os.makedirs('train')
-      os.makedirs('train/dog')
-      os.makedirs('train/cat')
-      os.makedirs('valid/dog')
-      os.makedirs('valid/cat')
-      os.makedirs('test/dog')
-      os.makedirs('test/cat')
 
-      for i in random.sample(glob.glob('cat*'), 500):
-          shutil.move(i, 'train/cat')      
-      for i in random.sample(glob.glob('dog*'), 500):
+      ## making required directories
+      os.mkdir('train')
+      os.mkdir('train/dog')
+      os.mkdir('train/cat')
+      os.mkdir('valid/dog')
+      os.mkdir('valid/cat')
+      os.mkdir('test/dog')
+      os.mkdir('test/cat')
+
+      ## moving 1000 random cat images to train/cat
+      for i in random.sample(glob.glob('cat*'), 1000):
+          shutil.move(i, 'train/cat')
+
+      ## moving 1000 random dog images to train/dog
+      for i in random.sample(glob.glob('dog*'), 1000):
           shutil.move(i, 'train/dog')
-      for i in random.sample(glob.glob('cat*'), 100):
-          shutil.move(i, 'valid/cat')        
-      for i in random.sample(glob.glob('dog*'), 100):
+
+      ## moving 300 random cat images to valid/cat
+      for i in random.sample(glob.glob('cat*'), 300):
+          shutil.move(i, 'valid/cat')
+
+      ## moving 300 random dog images to valid/dog
+      for i in random.sample(glob.glob('dog*'), 300):
           shutil.move(i, 'valid/dog')
-      for i in random.sample(glob.glob('cat*'), 50):
-          shutil.move(i, 'test/cat')      
-      for i in random.sample(glob.glob('dog*'), 50):
+
+      ## moving 100 random cat images to test/cat
+      for i in random.sample(glob.glob('cat*'), 100):
+          shutil.move(i, 'test/cat')
+
+      ## moving 100 random cat images to test/dog
+      for i in random.sample(glob.glob('cat*'), 100):
           shutil.move(i, 'test/dog')
 
-  os.chdir('../src/')
+  os.chdir('..')
   ```
   
  * **Note:** We are not using all the images from the dataset, just using a few. If you want you can just change the loop iterations as per the count of images.
  
- * So we have `1000` train images `500` for dogs and `500` for cats. `200` validation images(`100` dogs, `100` cats) and `100` test images(`50` dogs and `50` cats).
+ * So we have `2000` train images `1000` for dogs and `100` for cats. `600` validation images(`300` dogs, `390` cats) and `200` test images(`100` dogs and `100` cats).
  
 ## Processing The Data
 
@@ -78,32 +97,38 @@
   ## code present in src/processing.py
   
   ## creating train-batches
-  train_batches = ImageDataGenerator(
-      preprocessing_function=tf.keras.applications.vgg16.preprocess_input
-  ).flow_from_directory(directory=train_path, target_size=(224, 224), classes=['cat', 'dog'], batch_size=10)
+  train_batches = ImageDataGenerator(rescale=1./255).flow_from_directory(
+      directory = train_path,
+      classes = class_names,
+      batch_size = batch_size,
+      target_size = image_size,
+      shuffle = shuffle
+  )
 
-  ## creating validation-batches
-  valid_batches = ImageDataGenerator(
-      preprocessing_function=tf.keras.applications.vgg16.preprocess_input
-  ).flow_from_directory(directory=valid_path, target_size=(224, 224), classes=['cat', 'dog'], batch_size=10)
+  ## creating valid-batches
+  valid_batches = ImageDataGenerator(rescale=1./255).flow_from_directory(
+      directory = valid_path,
+      classes = class_names,
+      batch_size = batch_size,
+      target_size = image_size,
+      shuffle = shuffle
+  )
 
   ## creating test-batches
-  test_batches = ImageDataGenerator(
-      preprocessing_function=tf.keras.applications.vgg16.preprocess_input
-  ).flow_from_directory(directory=test_path, target_size=(224, 224), classes=['cat', 'dog'], batch_size=10, shuffle=False)
+  test_batches = ImageDataGenerator(rescale=1./255).flow_from_directory(
+      directory = test_path,
+      classes = class_names,
+      batch_size = batch_size,
+      target_size = image_size,
+      shuffle = shuffle
+  )
   ```
   
 * `ImageDataGenerator.flow_from_directory()` creates a `DirectoryIterator`, which generates batches of normalized tensor image data from the respective data directories.  
 
-* To `ImageDataGenerator` for each of the data sets, we specify `preprocessing_function=tf.keras.applications.vgg16.preprocess_input`.
-
-* We will be seesing VGG16 in later sections.
-
 * To `flow_from_directory()`, we first specify the path for the data. We then specify the `target_size` of the images, which will resize all images to the specified size. The size we specify here is determined by the input size that the neural network expects.
 
 * The `classes` parameter expects a `list` that contains the underlying class names, and lastly, we specify the `batch_size`.
-
-* We also specify `shuffle=False` only for `test_batches`. That's because, later when we plot the evaluation results from the model to a confusion matrix, we'll need to able to access the unshuffled labels for the test set. By default, the data sets are shuffled.
 
 * **Note:** In the case where you do not know the labels for the test data, you will need to modify the `test_batches` variable. Specifically, the change will be to set the parameters `classes = None` and `class_mode = None` in `flow_from_directory()`. 
 
@@ -118,8 +143,7 @@
   
   ## for plotting images
   imgs, labels = next(train_batches)
-  plot_images(imgs)
-  print(labels)
+  plot_images(imgs, labels)
   ```
   
 * Now here is how plotting is done.
@@ -130,24 +154,23 @@
   ## create subplots
   _, axes = plt.subplots(nrows=1, ncols=10, figsize=(20,20))
 
-  axes = axes.flatten()
+  ## plot images
+  for img, label, ax  in zip(imgs, labels, axes):
+      ax.imshow(img, cmap='Greys')
 
-  ## plotting image
-  for img, ax in zip(image_arr, axes):
-      ax.imshow(img)
+      if list(label) == [0.0, 1.0]:
+          ax.set_title('Dog')
+      else:
+          ax.set_title('Cat')
+
       ax.axis('off')
 
   plt.tight_layout()
-  plt.show()
   ```
 
 * This is what the first processed random batch from the training set looks like.
   
-  ![scr](https://user-images.githubusercontent.com/33928040/88193342-2f8bc200-cc5b-11ea-800e-6d4d4a09e119.png)
-  
-* Notice that the color appears to be distorted. This has to do with the VGG16 processing we applied to the data sets.
-
-* **Note:** Dogs are represented with the `one-hot encoding` of `[0,1]`, and cats are represented by `[1,0]`. 
+  ![src](https://user-images.githubusercontent.com/33928040/88648252-71e25280-d0e4-11ea-8180-6061512bbc26.png)
 
 ### Building A Simple CNN
 
@@ -183,4 +206,54 @@
 
 * We then `Flatten` the output from the convolutional layer and pass it to a `Dense` layer. This `Dense` layer is the output layer of the network, and so it has 1 nodes, and we are using the softmax activation function.
 
-* 
+* We can check out model summary by using `model.summary()`.
+
+  ```
+  Model: "sequential"
+  _________________________________________________________________
+  Layer (type)                 Output Shape              Param #   
+  =================================================================
+  conv2d (Conv2D)              (None, 256, 256, 32)      896       
+  _________________________________________________________________
+  max_pooling2d (MaxPooling2D) (None, 128, 128, 32)      0         
+  _________________________________________________________________
+  conv2d_1 (Conv2D)            (None, 128, 128, 64)      18496     
+  _________________________________________________________________
+  max_pooling2d_1 (MaxPooling2 (None, 64, 64, 64)        0         
+  _________________________________________________________________
+  flatten (Flatten)            (None, 262144)            0         
+  _________________________________________________________________
+  dense (Dense)                (None, 1)                 262145    
+  =================================================================
+  Total params: 281,537
+  Trainable params: 281,537
+  Non-trainable params: 0
+  ```
+  
+* Now that the model is built, we compile the model using the `Adam` optimizer with a learning rate of `0.0001`, a loss of `binary_crossentropy`, and we’ll look at `accuracy` as our performance `metric`.
+
+### Training The Model
+
+* Using `model.fit()` we will be training the model.
+
+  ```python
+  ## training the model
+  model.fit(
+      x = train_batches, 
+      steps_per_epoch = len(train_batches),
+      validation_data = valid_batches,
+      validation_steps = len(valid_batches),
+      epochs = 30,
+      verbose = 2
+  )
+  ```
+  
+* We need to specify `steps_per_epoch` to indicate how many batches of samples from our training set should be passed to the model before declaring one epoch complete. Similarly, we specify `validation_steps` in the same fashion but with using `valid_batches`.
+
+* We’re specifying `30` as the number of `epochs` we’d like to run, and setting the `verbose` parameter to 2, which just specifies the verbosity of the log output printed to the console during training.
+
+* When we run this line of code, we can see the output of the model over `30` epochs.
+
+  ```
+  
+  ```
