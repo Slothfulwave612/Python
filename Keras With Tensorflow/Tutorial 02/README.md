@@ -16,6 +16,8 @@
 
 * [Training The Model](#training-the-model)
 
+* [Testing and Evaluatiion](#testing-and-evaluation)
+
 ## Directory Tree
 
 ```
@@ -185,7 +187,7 @@
           Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding='same'),
           MaxPool2D(pool_size=(2, 2), strides=2),
           Flatten(),
-          Dense(units=1, activation='sigmoid')
+          Dense(units=2, activation='ssoftmax')
       ]
   )
   ```
@@ -204,29 +206,29 @@
 
 * This layer is again followed by the same type of `MaxPool2D` layer. 
 
-* We then `Flatten` the output from the convolutional layer and pass it to a `Dense` layer. This `Dense` layer is the output layer of the network, and so it has 1 nodes, and we are using the softmax activation function.
+* We then `Flatten` the output from the convolutional layer and pass it to a `Dense` layer. This `Dense` layer is the output layer of the network, and so it has 2 nodes, and we are using the `softmax` activation function.
 
 * We can check out model summary by using `model.summary()`.
 
   ```
-  Model: "sequential"
+  Model: "sequential_3"
   _________________________________________________________________
   Layer (type)                 Output Shape              Param #   
   =================================================================
-  conv2d (Conv2D)              (None, 256, 256, 32)      896       
+  conv2d_6 (Conv2D)            (None, 224, 224, 32)      896       
   _________________________________________________________________
-  max_pooling2d (MaxPooling2D) (None, 128, 128, 32)      0         
+  max_pooling2d_6 (MaxPooling2 (None, 112, 112, 32)      0         
   _________________________________________________________________
-  conv2d_1 (Conv2D)            (None, 128, 128, 64)      18496     
+  conv2d_7 (Conv2D)            (None, 112, 112, 64)      18496     
   _________________________________________________________________
-  max_pooling2d_1 (MaxPooling2 (None, 64, 64, 64)        0         
+  max_pooling2d_7 (MaxPooling2 (None, 56, 56, 64)        0         
   _________________________________________________________________
-  flatten (Flatten)            (None, 262144)            0         
+  flatten_3 (Flatten)          (None, 200704)            0         
   _________________________________________________________________
-  dense (Dense)                (None, 1)                 262145    
+  dense_3 (Dense)              (None, 2)                 401410    
   =================================================================
-  Total params: 281,537
-  Trainable params: 281,537
+  Total params: 420,802
+  Trainable params: 420,802
   Non-trainable params: 0
   ```
   
@@ -243,17 +245,42 @@
       steps_per_epoch = len(train_batches),
       validation_data = valid_batches,
       validation_steps = len(valid_batches),
-      epochs = 30,
+      epochs = 10,
       verbose = 2
   )
   ```
   
 * We need to specify `steps_per_epoch` to indicate how many batches of samples from our training set should be passed to the model before declaring one epoch complete. Similarly, we specify `validation_steps` in the same fashion but with using `valid_batches`.
 
-* We’re specifying `30` as the number of `epochs` we’d like to run, and setting the `verbose` parameter to 2, which just specifies the verbosity of the log output printed to the console during training.
+* We’re specifying `10` as the number of `epochs` we’d like to run, and setting the `verbose` parameter to 2, which just specifies the verbosity of the log output printed to the console during training.
 
 * When we run this line of code, we can see the output of the model over `30` epochs.
 
   ```
-  
+  Epoch 1/10
+  200/200 - 8s - loss: 0.6709 - accuracy: 0.5835 - val_loss: 0.6211 - val_accuracy: 0.6333
+  Epoch 2/10
+  200/200 - 7s - loss: 0.5895 - accuracy: 0.6830 - val_loss: 0.7808 - val_accuracy: 0.5417
+  Epoch 3/10
+  200/200 - 8s - loss: 0.5211 - accuracy: 0.7520 - val_loss: 0.5931 - val_accuracy: 0.6767
+  Epoch 4/10
+  200/200 - 7s - loss: 0.4503 - accuracy: 0.8140 - val_loss: 0.5810 - val_accuracy: 0.6983
+  Epoch 5/10
+  200/200 - 7s - loss: 0.3703 - accuracy: 0.8650 - val_loss: 0.5954 - val_accuracy: 0.7167
+  Epoch 6/10
+  200/200 - 7s - loss: 0.3178 - accuracy: 0.8785 - val_loss: 0.5860 - val_accuracy: 0.6933
+  Epoch 7/10
+  200/200 - 8s - loss: 0.2561 - accuracy: 0.9300 - val_loss: 0.6176 - val_accuracy: 0.6983
+  Epoch 8/10
+  200/200 - 8s - loss: 0.2116 - accuracy: 0.9410 - val_loss: 0.6321 - val_accuracy: 0.6950
+  Epoch 9/10
+  200/200 - 7s - loss: 0.1743 - accuracy: 0.9585 - val_loss: 0.7749 - val_accuracy: 0.6633
+  Epoch 10/10
+  200/200 - 7s - loss: 0.1437 - accuracy: 0.9750 - val_loss: 0.6838 - val_accuracy: 0.6750
   ```
+  
+* Our model is overfitting, let's see how it'll perform in test set.  
+
+### Testing and Evaluation
+
+* 
